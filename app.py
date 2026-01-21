@@ -406,8 +406,7 @@ def inject_custom_css():
     }
     
     /* Input styling */
-    .stSelectbox > div > div,
-    .stDateInput > div > div {
+    .stSelectbox > div > div {
         background: var(--glass-white) !important;
         border: 1px solid var(--glass-border) !important;
         border-radius: 8px !important;
@@ -425,14 +424,12 @@ def inject_custom_css():
     
     /* Input labels - make them readable */
     .stSelectbox label,
-    .stDateInput label,
     .stNumberInput label,
     .stTextInput label,
     [data-testid="stWidgetLabel"],
     [data-testid="stWidgetLabel"] p,
     [data-testid="stWidgetLabel"] span,
-    .stSelectbox [data-testid="stWidgetLabel"],
-    .stDateInput [data-testid="stWidgetLabel"] {
+    .stSelectbox [data-testid="stWidgetLabel"] {
         color: #e0f0e0 !important;
         font-size: 0.9rem !important;
         font-weight: 500 !important;
@@ -468,12 +465,6 @@ def inject_custom_css():
         color: #ffffff !important;
     }
     
-    /* Date input text - dark on white background */
-    [data-testid="stSidebar"] .stDateInput input,
-    .stDateInput input {
-        color: #1a1a1a !important;
-        background-color: #ffffff !important;
-    }
     
     /* Dropdown menu items - dark text on light background */
     [data-baseweb="menu"],
@@ -492,41 +483,13 @@ def inject_custom_css():
         background-color: #ffffff !important;
     }
     
-    /* Calendar date picker - fix visibility */
-    [data-baseweb="calendar"],
-    [data-baseweb="datepicker"],
-    [data-baseweb="calendar"] *,
-    [data-baseweb="datepicker"] *,
-    .stDateInput [data-baseweb="popover"],
-    .stDateInput [data-baseweb="popover"] * {
-        color: #1a1a1a !important;
-        background-color: #ffffff !important;
+    /* Dropdown popover styling */
+    [data-baseweb="popover"] {
+        background: #ffffff !important;
     }
     
-    /* Calendar header and navigation */
-    [data-baseweb="calendar"] [data-baseweb="button"],
-    [data-baseweb="calendar"] button {
-        color: #1a1a1a !important;
-        background-color: #f0f0f0 !important;
-    }
-    
-    /* Calendar day cells */
-    [data-baseweb="calendar"] [role="gridcell"],
-    [data-baseweb="calendar"] [role="gridcell"] div {
-        color: #1a1a1a !important;
-        background-color: #ffffff !important;
-    }
-    
-    /* Selected date */
-    [data-baseweb="calendar"] [aria-selected="true"],
-    [data-baseweb="calendar"] [aria-selected="true"] div {
-        background-color: #7cb342 !important;
-        color: #ffffff !important;
-    }
-    
-    /* Hover state for calendar days */
-    [data-baseweb="calendar"] [role="gridcell"]:hover {
-        background-color: #e8f5e9 !important;
+    [data-baseweb="popover"] > div {
+        background: #ffffff !important;
     }
     
     /* Hover state for dropdown items */
@@ -560,12 +523,18 @@ def render_sidebar():
         st.markdown('<p class="sidebar-section">Birth Data</p>', unsafe_allow_html=True)
         st.markdown("---")
         
-        birth_date = st.date_input(
-            "Date of Birth",
-            value=date(1990, 1, 1),
-            min_value=date(1900, 1, 1),
-            max_value=date.today()
-        )
+        # Minimal date selector
+        current_year = date.today().year
+        default_year = current_year - 30  # Assume average user ~30 years old
+        
+        birth_year = st.selectbox("Year", range(current_year, 1919, -1), index=current_year - default_year)
+        birth_month = st.selectbox("Month", range(1, 13), index=0)
+        
+        # Days based on month
+        max_days = 31 if birth_month in [1,3,5,7,8,10,12] else 30 if birth_month in [4,6,9,11] else 29 if (birth_year % 4 == 0 and birth_year % 100 != 0) or (birth_year % 400 == 0) else 28
+        birth_day = st.selectbox("Day", range(1, max_days + 1), index=0)
+        
+        birth_date = date(birth_year, birth_month, birth_day)
         
         # Option for unknown birth time
         time_unknown = st.checkbox("I don't know exact birth time", value=False)
@@ -776,12 +745,7 @@ def render_fate_card(fate, engine: FateEngine):
     # Uncertainty note
     uncertainty_note = ""
     if time_unknown:
-        uncertainty_note = """
-        <div style="margin-top: 0.8rem; padding: 0.6rem; background: rgba(212, 175, 55, 0.1); 
-                    border-radius: 6px; font-size: 0.75rem; color: var(--accent-gold);">
-            * Hour pillar estimated (noon default). Year/Month/Day pillars are accurate.
-        </div>
-        """
+        uncertainty_note = '<div style="margin-top: 0.8rem; padding: 0.6rem; background: rgba(212, 175, 55, 0.1); border-radius: 6px; font-size: 0.75rem; color: var(--accent-gold);">* Hour pillar estimated (noon default). Year/Month/Day pillars are accurate.</div>'
     
     st.markdown(f"""
     <div class="glass-card">
