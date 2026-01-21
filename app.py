@@ -669,56 +669,102 @@ def inject_custom_css():
         }
     }
     
-    /* ========== SIDEBAR ALWAYS VISIBLE - NO TOGGLE ========== */
-    /* Hide all collapse/expand buttons */
-    [data-testid="collapsedControl"],
-    [data-testid="stSidebarCollapseButton"],
-    button[kind="header"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* Force sidebar to always be visible */
-    [data-testid="stSidebar"] {
-        transform: none !important;
-        width: 300px !important;
-        min-width: 300px !important;
-    }
-    
-    [data-testid="stSidebar"][aria-expanded="false"] {
-        transform: none !important;
-        width: 300px !important;
-        min-width: 300px !important;
-        margin-left: 0 !important;
-    }
-    
-    [data-testid="stSidebar"] > div:first-child {
-        width: 300px !important;
-    }
-    
-    /* Mobile - sidebar narrower but still always visible */
-    @media screen and (max-width: 768px) {
-        [data-testid="stSidebar"],
-        [data-testid="stSidebar"][aria-expanded="false"] {
-            width: 260px !important;
-            min-width: 260px !important;
+    /* ========== DESKTOP: NORMAL SIDEBAR ========== */
+    @media screen and (min-width: 769px) {
+        /* Hide collapse buttons on desktop - sidebar always visible */
+        [data-testid="collapsedControl"],
+        [data-testid="stSidebarCollapseButton"] {
+            display: none !important;
+        }
+        
+        [data-testid="stSidebar"] {
+            transform: none !important;
+            width: 300px !important;
+            min-width: 300px !important;
         }
         
         [data-testid="stSidebar"] > div:first-child {
-            width: 260px !important;
+            width: 300px !important;
+        }
+    }
+    
+    /* ========== MOBILE: DRAWER STYLE SIDEBAR ========== */
+    @media screen and (max-width: 768px) {
+        /* Toggle button - always visible, prominent */
+        [data-testid="collapsedControl"] {
+            position: fixed !important;
+            top: 10px !important;
+            left: 10px !important;
+            z-index: 1000000 !important;
+            background: linear-gradient(135deg, #4a9f4a, #2d6a2d) !important;
+            border: 2px solid #8de88d !important;
+            border-radius: 12px !important;
+            padding: 12px !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         
-        /* Smaller text on mobile */
+        [data-testid="collapsedControl"] svg {
+            color: white !important;
+            width: 24px !important;
+            height: 24px !important;
+        }
+        
+        /* Sidebar as overlay drawer */
+        [data-testid="stSidebar"] {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
+            width: 85vw !important;
+            max-width: 320px !important;
+            z-index: 999999 !important;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.5) !important;
+        }
+        
+        [data-testid="stSidebar"] > div:first-child {
+            width: 100% !important;
+            height: 100% !important;
+            overflow-y: auto !important;
+        }
+        
+        /* Close button in sidebar */
+        [data-testid="stSidebarCollapseButton"] {
+            position: fixed !important;
+            top: 10px !important;
+            right: 10px !important;
+            z-index: 1000001 !important;
+            background: rgba(255,80,80,0.9) !important;
+            border: none !important;
+            border-radius: 50% !important;
+            width: 40px !important;
+            height: 40px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        [data-testid="stSidebarCollapseButton"] svg {
+            color: white !important;
+        }
+        
+        /* Main content takes full width */
+        .main .block-container {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            padding-top: 60px !important; /* Space for toggle button */
+        }
+        
+        /* Smaller cards on mobile */
         .glass-card {
             font-size: 0.85rem;
+            padding: 0.8rem !important;
         }
         
         .glass-card h3 {
             font-size: 0.95rem;
-        }
-        
-        .sidebar-section {
-            font-size: 0.9rem !important;
         }
     }
     </style>
