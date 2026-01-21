@@ -208,6 +208,13 @@ class FateProfile(BaseModel):
         ...,
         description="User's dominant birth element",
     )
+    
+    # Extra data for advanced calculations
+    extra_data: Optional[dict] = Field(
+        default=None,
+        description="Additional Zi Wei data: all stars, si hua, wu xing ju",
+    )
+    
     element_distribution: dict[Element, int] = Field(
         default_factory=dict,
         description="Count of each element in chart",
