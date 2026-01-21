@@ -210,8 +210,8 @@ class FateProfile(BaseModel):
     )
     
     # Extra data for advanced calculations
-    extra_data: Optional[dict] = Field(
-        default=None,
+    extra_data: dict = Field(
+        default_factory=dict,
         description="Additional Zi Wei data: all stars, si hua, wu xing ju",
     )
     

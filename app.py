@@ -925,7 +925,7 @@ SI_HUA_ENGLISH = {
 
 def render_fate_card(fate, engine: FateEngine):
     """Render fate profile card with powerful personal reading - English version."""
-    extra = fate.extra_data or {}
+    extra = getattr(fate, 'extra_data', None) or {}
     
     # Get all stars in life palace - translate to English
     all_stars = extra.get("all_major_stars", [])
