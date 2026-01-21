@@ -506,6 +506,168 @@ def inject_custom_css():
         background-color: #4a9f4a !important;
         color: #ffffff !important;
     }
+    
+    /* ========== MOBILE RESPONSIVE STYLES ========== */
+    
+    /* Mobile breakpoint: 768px and below */
+    @media screen and (max-width: 768px) {
+        /* Main container padding */
+        .main .block-container {
+            padding: 1rem 0.5rem !important;
+            max-width: 100% !important;
+        }
+        
+        /* Header adjustments */
+        .main-header h1 {
+            font-size: 1.8rem !important;
+        }
+        
+        .main-header p {
+            font-size: 0.85rem !important;
+        }
+        
+        /* Glass cards - full width on mobile */
+        .glass-card {
+            padding: 1rem !important;
+            margin: 0.5rem 0 !important;
+            border-radius: 12px !important;
+        }
+        
+        .glass-card h3 {
+            font-size: 1.1rem !important;
+        }
+        
+        /* Metric rows - stack on mobile */
+        .metric-row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.2rem !important;
+            padding: 0.5rem 0 !important;
+        }
+        
+        .metric-label {
+            font-size: 0.7rem !important;
+        }
+        
+        .metric-value {
+            font-size: 0.9rem !important;
+        }
+        
+        /* Element badges */
+        .element-badge {
+            padding: 0.2rem 0.5rem !important;
+            font-size: 0.75rem !important;
+        }
+        
+        /* Sidebar - better mobile touch targets */
+        [data-testid="stSidebar"] {
+            min-width: 280px !important;
+        }
+        
+        [data-testid="stSidebar"] .stSelectbox > div > div {
+            min-height: 44px !important;
+        }
+        
+        [data-testid="stSidebar"] button {
+            min-height: 44px !important;
+        }
+        
+        /* Columns - stack vertically on mobile */
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+        }
+        
+        /* Image container */
+        [data-testid="stImage"] {
+            padding: 0 !important;
+        }
+        
+        [data-testid="stImage"] img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        /* Button full width on mobile */
+        .stButton > button {
+            width: 100% !important;
+            min-height: 48px !important;
+            font-size: 1rem !important;
+        }
+        
+        /* Download button */
+        .stDownloadButton > button {
+            width: 100% !important;
+            min-height: 48px !important;
+        }
+        
+        /* Hash display - wrap text */
+        .hash-display {
+            font-size: 0.65rem !important;
+            word-break: break-all !important;
+        }
+        
+        /* Reading sections */
+        .glass-card > div[style*="grid"] {
+            grid-template-columns: 1fr !important;
+        }
+        
+        /* Four pillars - smaller on mobile */
+        .metric-value[style*="font-family: var(--font-mono)"] {
+            font-size: 0.8rem !important;
+            letter-spacing: 0.05em !important;
+        }
+        
+        /* Dividers */
+        .tree-divider {
+            margin: 1rem 0 !important;
+        }
+    }
+    
+    /* Small mobile (iPhone SE, etc) */
+    @media screen and (max-width: 375px) {
+        .main .block-container {
+            padding: 0.5rem 0.25rem !important;
+        }
+        
+        .glass-card {
+            padding: 0.8rem !important;
+        }
+        
+        .main-header h1 {
+            font-size: 1.5rem !important;
+        }
+        
+        .metric-value {
+            font-size: 0.85rem !important;
+        }
+    }
+    
+    /* Landscape mobile */
+    @media screen and (max-width: 926px) and (orientation: landscape) {
+        [data-testid="stSidebar"] {
+            max-width: 250px !important;
+        }
+        
+        .glass-card {
+            padding: 0.8rem !important;
+        }
+    }
+    
+    /* Touch-friendly improvements */
+    @media (hover: none) and (pointer: coarse) {
+        /* Larger touch targets */
+        .stSelectbox > div > div,
+        .stCheckbox > label,
+        button {
+            min-height: 44px !important;
+        }
+        
+        /* Remove hover effects that don't work on touch */
+        .glass-card:hover {
+            transform: none !important;
+        }
+    }
     </style>
     """, unsafe_allow_html=True)
 
