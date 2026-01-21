@@ -690,8 +690,10 @@ def inject_custom_css():
     
     /* ========== MOBILE: DRAWER STYLE SIDEBAR ========== */
     @media screen and (max-width: 768px) {
-        /* Toggle button - always visible, prominent */
-        [data-testid="collapsedControl"] {
+        /* Toggle button (green) - ALWAYS force visible when sidebar closed */
+        [data-testid="collapsedControl"],
+        [data-testid="baseButton-headerNoPadding"],
+        button[kind="headerNoPadding"] {
             position: fixed !important;
             top: 10px !important;
             left: 10px !important;
@@ -702,11 +704,17 @@ def inject_custom_css():
             padding: 12px !important;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
             display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
             align-items: center !important;
             justify-content: center !important;
+            width: 48px !important;
+            height: 48px !important;
         }
         
-        [data-testid="collapsedControl"] svg {
+        [data-testid="collapsedControl"] svg,
+        [data-testid="baseButton-headerNoPadding"] svg,
+        button[kind="headerNoPadding"] svg {
             color: white !important;
             width: 24px !important;
             height: 24px !important;
@@ -728,48 +736,54 @@ def inject_custom_css():
             width: 100% !important;
             height: 100% !important;
             overflow-y: auto !important;
+            padding-top: 60px !important;
         }
         
-        /* Close button in sidebar */
-        [data-testid="stSidebarCollapseButton"] {
+        /* Close button (red) in sidebar */
+        [data-testid="stSidebarCollapseButton"],
+        [data-testid="stSidebar"] button[kind="headerNoPadding"] {
             position: fixed !important;
             top: 10px !important;
-            right: 10px !important;
+            left: 270px !important;
             z-index: 1000001 !important;
-            background: rgba(255,80,80,0.9) !important;
-            border: none !important;
-            border-radius: 50% !important;
-            width: 44px !important;
-            height: 44px !important;
-            min-width: 44px !important;
-            min-height: 44px !important;
-            max-width: 44px !important;
-            max-height: 44px !important;
+            background: #ff5050 !important;
+            border: 2px solid #ff8080 !important;
+            border-radius: 12px !important;
+            width: 48px !important;
+            height: 48px !important;
+            min-width: 48px !important;
+            min-height: 48px !important;
             display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
             align-items: center !important;
             justify-content: center !important;
             overflow: hidden !important;
             padding: 0 !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
         }
         
-        [data-testid="stSidebarCollapseButton"] svg {
+        [data-testid="stSidebarCollapseButton"] svg,
+        [data-testid="stSidebar"] button[kind="headerNoPadding"] svg {
             color: white !important;
             width: 24px !important;
             height: 24px !important;
             flex-shrink: 0 !important;
         }
         
-        /* Hide any text in the button */
+        /* Hide any text in buttons */
         [data-testid="stSidebarCollapseButton"] span,
-        [data-testid="stSidebarCollapseButton"] p {
+        [data-testid="stSidebarCollapseButton"] p,
+        [data-testid="collapsedControl"] span {
             display: none !important;
+            font-size: 0 !important;
         }
         
         /* Main content takes full width */
         .main .block-container {
             padding-left: 1rem !important;
             padding-right: 1rem !important;
-            padding-top: 60px !important; /* Space for toggle button */
+            padding-top: 70px !important;
         }
         
         /* Smaller cards on mobile */
