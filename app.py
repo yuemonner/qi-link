@@ -668,12 +668,91 @@ def inject_custom_css():
             transform: none !important;
         }
     }
+    
+    /* ========== MOBILE SIDEBAR FIX ========== */
+    @media screen and (max-width: 768px) {
+        /* Make sidebar toggle button VERY visible */
+        [data-testid="collapsedControl"] {
+            position: fixed !important;
+            top: 0.5rem !important;
+            left: 0.5rem !important;
+            z-index: 999999 !important;
+            background: linear-gradient(135deg, #4a9f4a, #2d6a2d) !important;
+            border-radius: 8px !important;
+            padding: 0.5rem !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+        }
+        
+        [data-testid="collapsedControl"] svg {
+            color: #ffffff !important;
+            width: 24px !important;
+            height: 24px !important;
+        }
+        
+        /* Sidebar when expanded */
+        [data-testid="stSidebar"] {
+            z-index: 999998 !important;
+        }
+        
+        [data-testid="stSidebar"] > div:first-child {
+            background: linear-gradient(
+                180deg,
+                rgba(26, 47, 26, 0.98) 0%,
+                rgba(15, 28, 15, 0.99) 50%,
+                rgba(10, 8, 6, 1) 100%
+            ) !important;
+        }
+        
+        /* Close button in sidebar */
+        [data-testid="stSidebar"] button[kind="header"] {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-radius: 8px !important;
+        }
+    }
+    
+    /* Mobile instruction banner */
+    .mobile-instruction {
+        display: none;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .mobile-instruction {
+            display: block !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #4a9f4a, #2d6a2d);
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            z-index: 999997;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .mobile-instruction.hidden {
+            display: none !important;
+        }
+        
+        /* Add top padding to main content when banner is shown */
+        .main .block-container {
+            padding-top: 3rem !important;
+        }
+    }
     </style>
     """, unsafe_allow_html=True)
 
 
 def render_header():
-    """Render the main header."""
+    """Render the main header with mobile instruction."""
+    # Mobile instruction banner (only visible on mobile via CSS)
+    st.markdown('''
+    <div class="mobile-instruction" id="mobileInstruction" onclick="this.classList.add('hidden')">
+        Tap the green button (top-left) to enter birth data
+    </div>
+    ''', unsafe_allow_html=True)
+    
     st.markdown('<h1 class="main-title">Qi-Link</h1>', unsafe_allow_html=True)
     st.markdown('<p class="subtitle">DePIN Fengshui Node Protocol</p>', unsafe_allow_html=True)
     st.markdown('<div class="tree-divider"></div>', unsafe_allow_html=True)
