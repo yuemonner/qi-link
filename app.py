@@ -669,27 +669,6 @@ def inject_custom_css():
         }
     }
     
-    /* Birth input expander styling */
-    .main .stExpander {
-        background: var(--glass-white) !important;
-        border: 1px solid var(--glass-border) !important;
-        border-radius: 12px !important;
-        margin-bottom: 1rem !important;
-    }
-    
-    .main .stExpander > div:first-child {
-        background: transparent !important;
-        border-radius: 12px !important;
-    }
-    
-    .main .stExpander summary {
-        color: var(--accent-gold) !important;
-        font-weight: 600 !important;
-    }
-    
-    .main .stExpander summary:hover {
-        color: var(--accent-leaf) !important;
-    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -1661,61 +1640,12 @@ def render_blockchain_card(metadata):
     """, unsafe_allow_html=True)
 
 
-def render_birth_input_main():
-    """Render birth input in main area - works on all devices."""
-    current_year = datetime.now().year
-    
-    with st.expander("Enter Your Birth Data", expanded=True):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            year = st.selectbox("Year", range(1924, current_year + 1), 
-                              index=current_year - 30 - 1924, key="main_year")
-        with col2:
-            month = st.selectbox("Month", range(1, 13), key="main_month")
-        with col3:
-            max_days = 31
-            if month in [4, 6, 9, 11]:
-                max_days = 30
-            elif month == 2:
-                max_days = 29 if year % 4 == 0 else 28
-            day = st.selectbox("Day", range(1, max_days + 1), key="main_day")
-        
-        time_periods = [
-            ("Zi (23:00-01:00)", 0), ("Chou (01:00-03:00)", 1), 
-            ("Yin (03:00-05:00)", 3), ("Mao (05:00-07:00)", 5),
-            ("Chen (07:00-09:00)", 7), ("Si (09:00-11:00)", 9),
-            ("Wu (11:00-13:00)", 11), ("Wei (13:00-15:00)", 13),
-            ("Shen (15:00-17:00)", 15), ("You (17:00-19:00)", 17),
-            ("Xu (19:00-21:00)", 19), ("Hai (21:00-23:00)", 21),
-        ]
-        
-        col_time, col_check = st.columns([2, 1])
-        with col_check:
-            time_unknown = st.checkbox("Unknown time", key="main_time_unknown")
-        
-        with col_time:
-            if time_unknown:
-                hour = 12
-                st.selectbox("Time Period", ["Noon (default)"], disabled=True, key="main_time_disabled")
-            else:
-                selected = st.selectbox("Time Period", [t[0] for t in time_periods], index=6, key="main_time")
-                hour = next(t[1] for t in time_periods if t[0] == selected)
-        
-        birth_datetime = datetime(year, month, day, hour, 0)
-    
-    return birth_datetime, time_unknown
-
-
 def main():
     """Main application entry point."""
     inject_custom_css()
     render_header()
     
-    # Birth input in main area (works on all devices)
-    birth_datetime, time_unknown = render_birth_input_main()
-    
-    # Also render sidebar for desktop users who prefer it
-    sidebar_birth, mock_mode, sidebar_time_unknown = render_sidebar()
+    birth_datetime, mock_mode, time_unknown = render_sidebar()
     
     # Store time_unknown in session state for display purposes
     st.session_state.time_unknown = time_unknown
