@@ -669,6 +669,34 @@ def inject_custom_css():
         }
     }
     
+    /* ========== MOBILE: SAME AS DESKTOP, JUST SMALLER ========== */
+    @media screen and (max-width: 768px) {
+        /* Keep sidebar always visible and expanded */
+        [data-testid="stSidebar"] {
+            min-width: 250px !important;
+            width: 250px !important;
+        }
+        
+        [data-testid="stSidebar"][aria-expanded="false"] {
+            min-width: 250px !important;
+            width: 250px !important;
+            margin-left: 0 !important;
+        }
+        
+        /* Prevent sidebar from collapsing */
+        [data-testid="stSidebar"] > div:first-child {
+            width: 250px !important;
+        }
+        
+        /* Make text slightly smaller on mobile */
+        .glass-card {
+            font-size: 0.9rem;
+        }
+        
+        .glass-card h3 {
+            font-size: 1rem;
+        }
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -678,57 +706,6 @@ def render_header():
     st.markdown('<h1 class="main-title">Qi-Link</h1>', unsafe_allow_html=True)
     st.markdown('<p class="subtitle">DePIN Fengshui Node Protocol</p>', unsafe_allow_html=True)
     st.markdown('<div class="tree-divider"></div>', unsafe_allow_html=True)
-
-
-def render_inline_birth_input():
-    """
-    Render birth input inline for mobile users.
-    Hidden on desktop via CSS.
-    """
-    current_year = datetime.now().year
-    default_year_index = current_year - 30 - (current_year - 100)
-    
-    st.markdown("**Birth Data**")
-    
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        year = st.selectbox("Year", range(current_year - 100, current_year + 1), 
-                          index=default_year_index, key="inline_year")
-    with c2:
-        month = st.selectbox("Month", range(1, 13), key="inline_month")
-    with c3:
-        day = st.selectbox("Day", range(1, 32), key="inline_day")
-    
-    time_options = [
-        "Zi 23-01", "Chou 01-03", "Yin 03-05", "Mao 05-07",
-        "Chen 07-09", "Si 09-11", "Wu 11-13", "Wei 13-15",
-        "Shen 15-17", "You 17-19", "Xu 19-21", "Hai 21-23"
-    ]
-    time_hours = [0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
-    
-    t1, t2 = st.columns([2, 1])
-    with t1:
-        time_unknown = st.checkbox("Unknown time", key="inline_unknown")
-    
-    if time_unknown:
-        hour = 12
-    else:
-        with t2:
-            time_idx = st.selectbox("Time", range(len(time_options)), 
-                                   format_func=lambda x: time_options[x],
-                                   index=6, key="inline_time")
-            hour = time_hours[time_idx]
-    
-    # Validate day
-    max_day = 31
-    if month in [4, 6, 9, 11]:
-        max_day = 30
-    elif month == 2:
-        max_day = 29 if year % 4 == 0 else 28
-    
-    st.markdown("---")
-    
-    return datetime(year, month, min(day, max_day), hour, 0), time_unknown
 
 
 def get_weather_by_city(city_name: str, location_service):
@@ -1696,34 +1673,7 @@ def main():
     inject_custom_css()
     render_header()
     
-    # Sidebar for desktop
     birth_datetime, mock_mode, time_unknown = render_sidebar()
-    
-    # Inline birth input for mobile (CSS hides on desktop)
-    st.markdown('<div class="mobile-birth-section">', unsafe_allow_html=True)
-    inline_birth, inline_unknown = render_inline_birth_input()
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Inject CSS to show/hide appropriately
-    st.markdown('''
-    <style>
-    /* Desktop: hide inline birth input, show sidebar */
-    @media screen and (min-width: 769px) {
-        .mobile-birth-section { display: none !important; }
-    }
-    /* Mobile: show inline birth input, hide sidebar */
-    @media screen and (max-width: 768px) {
-        .mobile-birth-section { display: block !important; }
-        [data-testid="stSidebar"] { display: none !important; }
-        [data-testid="collapsedControl"] { display: none !important; }
-    }
-    </style>
-    ''', unsafe_allow_html=True)
-    
-    # Use inline values on mobile
-    if 'inline_year' in st.session_state:
-        birth_datetime = inline_birth
-        time_unknown = inline_unknown
     
     # Store time_unknown in session state for display purposes
     st.session_state.time_unknown = time_unknown
