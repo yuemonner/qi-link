@@ -669,71 +669,43 @@ def inject_custom_css():
         }
     }
     
-    /* ========== SIDEBAR TOGGLE - ALWAYS VISIBLE ========== */
-    /* The toggle button when sidebar is collapsed */
-    [data-testid="collapsedControl"] {
-        position: fixed !important;
-        top: 1rem !important;
-        left: 1rem !important;
-        z-index: 999999 !important;
-        background: linear-gradient(135deg, #4a9f4a, #2d6a2d) !important;
-        border: 2px solid rgba(141, 232, 141, 0.5) !important;
-        border-radius: 10px !important;
-        padding: 10px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(74, 159, 74, 0.3) !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
+    /* ========== SIDEBAR ALWAYS VISIBLE - NO TOGGLE ========== */
+    /* Hide all collapse/expand buttons */
+    [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapseButton"],
+    button[kind="header"] {
+        display: none !important;
+        visibility: hidden !important;
     }
     
-    [data-testid="collapsedControl"]:hover {
-        background: linear-gradient(135deg, #5cb85c, #3d8b3d) !important;
-        transform: scale(1.1) !important;
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5), 0 0 30px rgba(141, 232, 141, 0.5) !important;
+    /* Force sidebar to always be visible */
+    [data-testid="stSidebar"] {
+        transform: none !important;
+        width: 300px !important;
+        min-width: 300px !important;
     }
     
-    [data-testid="collapsedControl"] svg {
-        color: #ffffff !important;
-        width: 24px !important;
-        height: 24px !important;
+    [data-testid="stSidebar"][aria-expanded="false"] {
+        transform: none !important;
+        width: 300px !important;
+        min-width: 300px !important;
+        margin-left: 0 !important;
     }
     
-    /* The collapse button inside sidebar (to close it) */
-    [data-testid="stSidebarCollapseButton"] {
-        position: absolute !important;
-        top: 0.5rem !important;
-        right: 0.5rem !important;
-        background: rgba(255, 100, 100, 0.2) !important;
-        border: 1px solid rgba(255, 100, 100, 0.4) !important;
-        border-radius: 8px !important;
-        padding: 6px !important;
-        z-index: 100 !important;
+    [data-testid="stSidebar"] > div:first-child {
+        width: 300px !important;
     }
     
-    [data-testid="stSidebarCollapseButton"]:hover {
-        background: rgba(255, 100, 100, 0.4) !important;
-    }
-    
-    [data-testid="stSidebarCollapseButton"] svg {
-        color: #ff8a80 !important;
-    }
-    
-    /* Mobile adjustments */
+    /* Mobile - sidebar narrower but still always visible */
     @media screen and (max-width: 768px) {
-        [data-testid="collapsedControl"] {
-            top: 0.5rem !important;
-            left: 0.5rem !important;
-            padding: 12px !important;
+        [data-testid="stSidebar"],
+        [data-testid="stSidebar"][aria-expanded="false"] {
+            width: 260px !important;
+            min-width: 260px !important;
         }
         
-        [data-testid="collapsedControl"] svg {
-            width: 28px !important;
-            height: 28px !important;
-        }
-        
-        /* Sidebar takes more width on mobile when open */
         [data-testid="stSidebar"] > div:first-child {
-            width: 85vw !important;
-            max-width: 320px !important;
+            width: 260px !important;
         }
         
         /* Smaller text on mobile */
@@ -743,6 +715,10 @@ def inject_custom_css():
         
         .glass-card h3 {
             font-size: 0.95rem;
+        }
+        
+        .sidebar-section {
+            font-size: 0.9rem !important;
         }
     }
     </style>
