@@ -739,15 +739,30 @@ def inject_custom_css():
             background: rgba(255,80,80,0.9) !important;
             border: none !important;
             border-radius: 50% !important;
-            width: 40px !important;
-            height: 40px !important;
+            width: 44px !important;
+            height: 44px !important;
+            min-width: 44px !important;
+            min-height: 44px !important;
+            max-width: 44px !important;
+            max-height: 44px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            overflow: hidden !important;
+            padding: 0 !important;
         }
         
         [data-testid="stSidebarCollapseButton"] svg {
             color: white !important;
+            width: 24px !important;
+            height: 24px !important;
+            flex-shrink: 0 !important;
+        }
+        
+        /* Hide any text in the button */
+        [data-testid="stSidebarCollapseButton"] span,
+        [data-testid="stSidebarCollapseButton"] p {
+            display: none !important;
         }
         
         /* Main content takes full width */
