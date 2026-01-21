@@ -669,50 +669,6 @@ def inject_custom_css():
         }
     }
     
-    /* ========== MOBILE RESPONSIVE ========== */
-    @media screen and (max-width: 768px) {
-        /* Force sidebar to show on mobile */
-        [data-testid="stSidebar"] {
-            display: block !important;
-            position: relative !important;
-            width: 100% !important;
-            min-width: 100% !important;
-            transform: none !important;
-            z-index: 1 !important;
-        }
-        
-        [data-testid="stSidebar"] > div:first-child {
-            width: 100% !important;
-            min-height: auto !important;
-            padding: 1rem !important;
-            background: linear-gradient(180deg, rgba(26, 47, 26, 0.95) 0%, rgba(10, 8, 6, 0.98) 100%) !important;
-            border-radius: 12px !important;
-            margin-bottom: 1rem !important;
-        }
-        
-        /* Hide the collapse button on mobile since sidebar is always visible */
-        [data-testid="collapsedControl"],
-        [data-testid="stSidebarCollapseButton"] {
-            display: none !important;
-        }
-        
-        /* Main content adjustments */
-        .main .block-container {
-            max-width: 100% !important;
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-            padding-top: 1rem !important;
-        }
-        
-        /* App wrapper - stack vertically */
-        [data-testid="stAppViewContainer"] {
-            flex-direction: column !important;
-        }
-        
-        [data-testid="stAppViewContainer"] > section {
-            width: 100% !important;
-        }
-    }
     </style>
     """, unsafe_allow_html=True)
 
