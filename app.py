@@ -479,6 +479,7 @@ def inject_custom_css():
     [data-baseweb="menu"],
     [data-baseweb="menu"] li,
     [data-baseweb="menu"] div,
+    [data-baseweb="popover"],
     [data-baseweb="popover"] li,
     [data-baseweb="popover"] div,
     [role="listbox"],
@@ -489,6 +490,43 @@ def inject_custom_css():
     ul[data-testid="stSelectboxVirtualDropdown"] span {
         color: #1a1a1a !important;
         background-color: #ffffff !important;
+    }
+    
+    /* Calendar date picker - fix visibility */
+    [data-baseweb="calendar"],
+    [data-baseweb="datepicker"],
+    [data-baseweb="calendar"] *,
+    [data-baseweb="datepicker"] *,
+    .stDateInput [data-baseweb="popover"],
+    .stDateInput [data-baseweb="popover"] * {
+        color: #1a1a1a !important;
+        background-color: #ffffff !important;
+    }
+    
+    /* Calendar header and navigation */
+    [data-baseweb="calendar"] [data-baseweb="button"],
+    [data-baseweb="calendar"] button {
+        color: #1a1a1a !important;
+        background-color: #f0f0f0 !important;
+    }
+    
+    /* Calendar day cells */
+    [data-baseweb="calendar"] [role="gridcell"],
+    [data-baseweb="calendar"] [role="gridcell"] div {
+        color: #1a1a1a !important;
+        background-color: #ffffff !important;
+    }
+    
+    /* Selected date */
+    [data-baseweb="calendar"] [aria-selected="true"],
+    [data-baseweb="calendar"] [aria-selected="true"] div {
+        background-color: #7cb342 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Hover state for calendar days */
+    [data-baseweb="calendar"] [role="gridcell"]:hover {
+        background-color: #e8f5e9 !important;
     }
     
     /* Hover state for dropdown items */
