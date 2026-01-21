@@ -669,20 +669,9 @@ def inject_custom_css():
         }
     }
     
-    /* ========== MOBILE: HIDE SIDEBAR, USE MAIN AREA INPUT ========== */
+    /* ========== MOBILE RESPONSIVE ========== */
     @media screen and (max-width: 768px) {
-        /* Hide sidebar and its toggle completely on mobile */
-        [data-testid="stSidebar"],
-        [data-testid="collapsedControl"],
-        [data-testid="stSidebarCollapsedControl"] {
-            display: none !important;
-            visibility: hidden !important;
-            width: 0 !important;
-            height: 0 !important;
-            overflow: hidden !important;
-        }
-        
-        /* Ensure main content takes full width */
+        /* Main content full width on mobile */
         .main .block-container {
             max-width: 100% !important;
             padding-left: 1rem !important;
@@ -698,55 +687,6 @@ def render_header():
     st.markdown('<h1 class="main-title">Qi-Link</h1>', unsafe_allow_html=True)
     st.markdown('<p class="subtitle">DePIN Fengshui Node Protocol</p>', unsafe_allow_html=True)
     st.markdown('<div class="tree-divider"></div>', unsafe_allow_html=True)
-
-
-def render_mobile_birth_input():
-    """
-    Render birth input for mobile users directly in main area.
-    Returns birth_datetime and time_unknown.
-    Hidden on desktop via CSS.
-    """
-    current_year = datetime.now().year
-    
-    with st.expander("Tap to Enter Birth Data", expanded=False):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            year = st.selectbox("Year", range(current_year - 100, current_year + 1), 
-                              index=70, key="m_year", label_visibility="collapsed")
-            st.caption("Year")
-        with col2:
-            month = st.selectbox("Month", range(1, 13), index=0, key="m_month", label_visibility="collapsed")
-            st.caption("Month")
-        with col3:
-            day = st.selectbox("Day", range(1, 32), index=0, key="m_day", label_visibility="collapsed")
-            st.caption("Day")
-        
-        time_periods = [
-            ("Zi (23-01)", 0), ("Chou (01-03)", 1), ("Yin (03-05)", 3),
-            ("Mao (05-07)", 5), ("Chen (07-09)", 7), ("Si (09-11)", 9),
-            ("Wu (11-13)", 11), ("Wei (13-15)", 13), ("Shen (15-17)", 15),
-            ("You (17-19)", 17), ("Xu (19-21)", 19), ("Hai (21-23)", 21),
-        ]
-        
-        time_unknown = st.checkbox("Unknown birth time", key="m_time_unknown")
-        
-        if not time_unknown:
-            selected = st.selectbox("Time Period", [t[0] for t in time_periods], index=6, key="m_time")
-            hour = next(t[1] for t in time_periods if t[0] == selected)
-        else:
-            hour = 12
-        
-        # Handle day overflow
-        max_day = 31
-        if month in [4, 6, 9, 11]:
-            max_day = 30
-        elif month == 2:
-            max_day = 29 if year % 4 == 0 else 28
-        actual_day = min(day, max_day)
-        
-        birth_dt = datetime(year, month, actual_day, hour, 0)
-    
-    return birth_dt, time_unknown
 
 
 def get_weather_by_city(city_name: str, location_service):
@@ -1714,42 +1654,7 @@ def main():
     inject_custom_css()
     render_header()
     
-    # Desktop: use sidebar
     birth_datetime, mock_mode, time_unknown = render_sidebar()
-    
-    # Mobile: show birth input in main area (hidden on desktop via CSS)
-    st.markdown('''<div class="mobile-only-birth">''', unsafe_allow_html=True)
-    mobile_birth, mobile_time_unknown = render_mobile_birth_input()
-    st.markdown('''</div>
-    <style>
-    /* Hide mobile birth input on desktop */
-    .mobile-only-birth { display: none; }
-    @media screen and (max-width: 768px) {
-        .mobile-only-birth { 
-            display: block !important; 
-            margin-bottom: 1rem;
-        }
-        .mobile-only-birth .stExpander {
-            background: rgba(74, 159, 74, 0.1) !important;
-            border: 2px solid rgba(74, 159, 74, 0.5) !important;
-            border-radius: 12px !important;
-        }
-        .mobile-only-birth summary {
-            color: #8de88d !important;
-            font-weight: 600 !important;
-            font-size: 1rem !important;
-        }
-        .mobile-only-birth summary svg {
-            color: #8de88d !important;
-        }
-    }
-    </style>
-    ''', unsafe_allow_html=True)
-    
-    # Use mobile input values if on mobile (check if mobile keys exist)
-    if 'm_year' in st.session_state:
-        birth_datetime = mobile_birth
-        time_unknown = mobile_time_unknown
     
     # Store time_unknown in session state for display purposes
     st.session_state.time_unknown = time_unknown
