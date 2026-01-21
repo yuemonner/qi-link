@@ -669,75 +669,41 @@ def inject_custom_css():
         }
     }
     
-    /* ========== MOBILE SIDEBAR FIX ========== */
-    @media screen and (max-width: 768px) {
-        /* Make sidebar toggle button VERY visible */
-        [data-testid="collapsedControl"] {
-            position: fixed !important;
-            top: 0.5rem !important;
-            left: 0.5rem !important;
-            z-index: 999999 !important;
-            background: linear-gradient(135deg, #4a9f4a, #2d6a2d) !important;
-            border-radius: 8px !important;
-            padding: 0.5rem !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
-        }
-        
-        [data-testid="collapsedControl"] svg {
-            color: #ffffff !important;
-            width: 24px !important;
-            height: 24px !important;
-        }
-        
-        /* Sidebar when expanded */
-        [data-testid="stSidebar"] {
-            z-index: 999998 !important;
-        }
-        
-        [data-testid="stSidebar"] > div:first-child {
-            background: linear-gradient(
-                180deg,
-                rgba(26, 47, 26, 0.98) 0%,
-                rgba(15, 28, 15, 0.99) 50%,
-                rgba(10, 8, 6, 1) 100%
-            ) !important;
-        }
-        
-        /* Close button in sidebar */
-        [data-testid="stSidebar"] button[kind="header"] {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border-radius: 8px !important;
-        }
-    }
-    
-    /* Mobile instruction banner */
-    .mobile-instruction {
+    /* ========== MOBILE BIRTH INPUT ========== */
+    .mobile-birth-input {
         display: none;
     }
     
     @media screen and (max-width: 768px) {
-        .mobile-instruction {
+        .mobile-birth-input {
             display: block !important;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(90deg, #4a9f4a, #2d6a2d);
-            color: white;
-            text-align: center;
-            padding: 0.5rem;
-            font-size: 0.8rem;
-            z-index: 999997;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
         }
         
-        .mobile-instruction.hidden {
-            display: none !important;
+        /* Style the expander for birth input */
+        .mobile-birth-input .stExpander {
+            background: var(--glass-white) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 12px !important;
         }
         
-        /* Add top padding to main content when banner is shown */
-        .main .block-container {
-            padding-top: 3rem !important;
+        .mobile-birth-input .stExpander > div:first-child {
+            background: transparent !important;
+        }
+        
+        .mobile-birth-input .stExpander summary {
+            color: var(--accent-gold) !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Make selects readable on mobile */
+        .mobile-birth-input .stSelectbox label {
+            color: var(--text-bright) !important;
+            font-size: 0.85rem !important;
+        }
+        
+        .mobile-birth-input .stCheckbox label {
+            color: var(--text-mid) !important;
         }
     }
     </style>
@@ -745,14 +711,7 @@ def inject_custom_css():
 
 
 def render_header():
-    """Render the main header with mobile instruction."""
-    # Mobile instruction banner (only visible on mobile via CSS)
-    st.markdown('''
-    <div class="mobile-instruction" id="mobileInstruction" onclick="this.classList.add('hidden')">
-        Tap the green button (top-left) to enter birth data
-    </div>
-    ''', unsafe_allow_html=True)
-    
+    """Render the main header."""
     st.markdown('<h1 class="main-title">Qi-Link</h1>', unsafe_allow_html=True)
     st.markdown('<p class="subtitle">DePIN Fengshui Node Protocol</p>', unsafe_allow_html=True)
     st.markdown('<div class="tree-divider"></div>', unsafe_allow_html=True)
@@ -1718,12 +1677,82 @@ def render_blockchain_card(metadata):
     """, unsafe_allow_html=True)
 
 
+def render_mobile_birth_input():
+    """Render birth input for mobile users in an expander."""
+    current_year = datetime.now().year
+    
+    with st.expander("Enter Your Birth Data", expanded=True):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            year = st.selectbox("Year", range(current_year - 100, current_year + 1), 
+                              index=current_year - 30 - (current_year - 100), key="mobile_year")
+        with col2:
+            month = st.selectbox("Month", range(1, 13), index=0, key="mobile_month")
+        with col3:
+            day = st.selectbox("Day", range(1, 32), index=0, key="mobile_day")
+        
+        # Time period
+        time_periods = [
+            ("子時 Zi (23:00-01:00)", 0),
+            ("丑時 Chou (01:00-03:00)", 1),
+            ("寅時 Yin (03:00-05:00)", 3),
+            ("卯時 Mao (05:00-07:00)", 5),
+            ("辰時 Chen (07:00-09:00)", 7),
+            ("巳時 Si (09:00-11:00)", 9),
+            ("午時 Wu (11:00-13:00)", 11),
+            ("未時 Wei (13:00-15:00)", 13),
+            ("申時 Shen (15:00-17:00)", 15),
+            ("酉時 You (17:00-19:00)", 17),
+            ("戌時 Xu (19:00-21:00)", 19),
+            ("亥時 Hai (21:00-23:00)", 21),
+        ]
+        time_unknown = st.checkbox("I don't know my birth time", key="mobile_time_unknown")
+        
+        if time_unknown:
+            hour = 12
+        else:
+            selected_time = st.selectbox(
+                "Birth Time",
+                [t[0] for t in time_periods],
+                index=6,
+                key="mobile_time"
+            )
+            hour = next(t[1] for t in time_periods if t[0] == selected_time)
+        
+        birth_datetime = datetime(year, month, min(day, 28 if month == 2 else 30 if month in [4,6,9,11] else 31), hour, 0)
+        
+    return birth_datetime, time_unknown
+
+
 def main():
     """Main application entry point."""
     inject_custom_css()
     render_header()
     
+    # Render sidebar for desktop
     birth_datetime, mock_mode, time_unknown = render_sidebar()
+    
+    # Also render mobile birth input in main area
+    st.markdown('''
+    <style>
+    @media screen and (min-width: 769px) {
+        .mobile-birth-input { display: none !important; }
+    }
+    @media screen and (max-width: 768px) {
+        [data-testid="stSidebar"] { display: none !important; }
+    }
+    </style>
+    ''', unsafe_allow_html=True)
+    
+    # Mobile birth input (only visible on mobile via CSS)
+    st.markdown('<div class="mobile-birth-input">', unsafe_allow_html=True)
+    mobile_birth, mobile_time_unknown = render_mobile_birth_input()
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Use mobile values if they differ (indicating mobile interaction)
+    if 'mobile_year' in st.session_state:
+        birth_datetime = mobile_birth
+        time_unknown = mobile_time_unknown
     
     # Store time_unknown in session state for display purposes
     st.session_state.time_unknown = time_unknown
